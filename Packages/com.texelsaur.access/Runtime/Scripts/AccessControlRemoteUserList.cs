@@ -1,4 +1,5 @@
 ﻿
+using System;
 using Texel;
 using UdonSharp;
 using UnityEngine;
@@ -94,7 +95,7 @@ namespace Texel
         {
             _DebugLog($"Received data {result.Result.Length} characters");
 
-            userList = result.Result.Split('\n');
+            userList = result.Result.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
             _UpdateHandlers(EVENT_REVALIDATE);
         }

@@ -2,26 +2,26 @@
   "name": "com.texelsaur.access",
   "displayName": "TXL - AccessTXL",
   "author": {
-  	"name": "Texelsaur",
-  	"email": "",
-  	"url": "https://texelsaurus.com"
+    "name": "Texelsaur",
+    "email": "",
+    "url": "https://texelsaurus.com"
   },
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Additional controls, access sources, and tools that build on the basic Access Control model",
   "gitDependencies": {},
   "vpmDependencies": {
     "com.vrchat.udonsharp": "^1.1.8",
-	"com.texelsaur.common": "^1.0.0"
+    "com.texelsaur.common": "^1.0.0"
   },
   "legacyFolders": {
-  	"Assets\\Texel\\ACL": "6d836c3eaf6837d40aa4219fb6a42333",
-  	"Assets\\Texel\\Editor\\ACL": "d7477807343521140a364e80cfaf16e1",
-  	"Assets\\Texel\\Editor\\Common\\ACL": "65d3dc0a981654c42bddb68d3df9537b",
-  	"Assets\\Texel\\Common": "4b7c604a04100044fa7a6bc20b864417",
-  	"Assets\\Texel\\Editor\\Common\\Zone": "02b21299875c99746bb1cb275d975b0f"
+    "Assets\\Texel\\ACL": "6d836c3eaf6837d40aa4219fb6a42333",
+    "Assets\\Texel\\Editor\\ACL": "d7477807343521140a364e80cfaf16e1",
+    "Assets\\Texel\\Editor\\Common\\ACL": "65d3dc0a981654c42bddb68d3df9537b",
+    "Assets\\Texel\\Common": "4b7c604a04100044fa7a6bc20b864417",
+    "Assets\\Texel\\Editor\\Common\\Zone": "02b21299875c99746bb1cb275d975b0f"
   },
   "legacyFiles": {
-  	"Assets\\Texel\\Editor\\Common\\EditorTools.cs": "bf2c707af7283de498e934204c342c06",
-  	"Assets\\Texel\\Video\\Textures\\UI\\ui_atlas.png": "a1d53f153b56ac4ca4eaa6ba39a8ee4"
+    "Assets\\Texel\\Editor\\Common\\EditorTools.cs": "bf2c707af7283de498e934204c342c06",
+    "Assets\\Texel\\Video\\Textures\\UI\\ui_atlas.png": "a1d53f153b56ac4ca4eaa6ba39a8ee4"
   }
 }
