@@ -11,6 +11,7 @@ namespace Texel
     {
         static bool[] _showWhitelistFoldout = new bool[0];
         static bool[] _showFunctionFoldout = new bool[0];
+        static bool[] _showToggleFoldout = new bool[0];
 
         SerializedProperty keypadsProperty;
         SerializedProperty whitelistCodesProperty;
@@ -19,6 +20,9 @@ namespace Texel
         SerializedProperty functionTargetsProperty;
         SerializedProperty functionNamesProperty;
         SerializedProperty functionArgsProperty;
+        SerializedProperty toggleCodesProperty;
+        SerializedProperty toggleObjectsProperty;
+        SerializedProperty toggleActionsProperty;
 
         private void OnEnable()
         {
@@ -29,6 +33,9 @@ namespace Texel
             functionTargetsProperty = serializedObject.FindProperty("functionTargets");
             functionNamesProperty = serializedObject.FindProperty("functionNames");
             functionArgsProperty = serializedObject.FindProperty("functionArgs");
+            toggleCodesProperty = serializedObject.FindProperty("toggleCodes");
+            toggleObjectsProperty = serializedObject.FindProperty("toggleObjects");
+            toggleActionsProperty = serializedObject.FindProperty("toggleActions");
         }
 
         public override void OnInspectorGUI()
@@ -47,6 +54,11 @@ namespace Texel
             EditorGUILayout.HelpBox("Functions will only be invoked for the local player when the correct code is entered.", MessageType.Info);
             EditorGUILayout.LabelField("Function Calls", EditorStyles.boldLabel);
             FunctionFoldout();
+
+            EditorGUILayout.Space();
+            EditorGUILayout.HelpBox("Objects will only be toggled for the local player when the correct code is entered.", MessageType.Info);
+            EditorGUILayout.LabelField("Object Toggles", EditorStyles.boldLabel);
+            ToggleFoldout();
 
             serializedObject.ApplyModifiedProperties();
         }
@@ -108,6 +120,31 @@ namespace Texel
                     EditorGUILayout.PropertyField(funcTarget, new GUIContent("Target Script"));
                     EditorGUILayout.PropertyField(funcName, new GUIContent("Function Name"));
                     EditorGUILayout.PropertyField(funcArg, new GUIContent("Player Field Name", "Optional.  Name of field on target script where a reference to the player entering the code can be set."));
+
+                    EditorGUI.indentLevel--;
+                }
+            }
+        }
+
+        private void ToggleFoldout()
+        {
+            _showToggleFoldout = EditorTools.MultiArraySize(serializedObject, _showToggleFoldout,
+                toggleCodesProperty, toggleObjectsProperty, toggleActionsProperty);
+
+            for (int i = 0; i < toggleCodesProperty.arraySize; i++)
+            {
+                _showToggleFoldout[i] = EditorGUILayout.Foldout(_showToggleFoldout[i], $"Toggle {i}");
+                if (_showToggleFoldout[i])
+                {
+                    EditorGUI.indentLevel++;
+
+                    SerializedProperty code = toggleCodesProperty.GetArrayElementAtIndex(i);
+                    SerializedProperty obj = toggleObjectsProperty.GetArrayElementAtIndex(i);
+                    SerializedProperty action = toggleActionsProperty.GetArrayElementAtIndex(i);
+
+                    EditorGUILayout.PropertyField(code, new GUIContent("Code"));
+                    EditorGUILayout.PropertyField(obj, new GUIContent("Object"));
+                    EditorGUILayout.PropertyField(action, new GUIContent("Action"));
 
                     EditorGUI.indentLevel--;
                 }

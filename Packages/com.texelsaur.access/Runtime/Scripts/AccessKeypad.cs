@@ -7,6 +7,13 @@ using VRC.Udon;
 
 namespace Texel
 {
+    public enum KeypadToggleAction
+    {
+        Enable,
+        Disable,
+        Toggle,
+    }
+
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class AccessKeypad : UdonSharpBehaviour
     {
@@ -19,6 +26,10 @@ namespace Texel
         [SerializeField] private UdonBehaviour[] functionTargets;
         [SerializeField] private string[] functionNames;
         [SerializeField] private string[] functionArgs;
+
+        [SerializeField] private string[] toggleCodes;
+        [SerializeField] private GameObject[] toggleObjects;
+        [SerializeField] private KeypadToggleAction[] toggleActions;
 
         [NonSerialized]
         public string keypadArg = "";
@@ -59,6 +70,21 @@ namespace Texel
                 if (functionArgs[i] != null && functionArgs[i].Length > 0)
                     functionTargets[i].SetProgramVariable(functionArgs[i], Networking.LocalPlayer);
                 functionTargets[i].SendCustomEvent(functionNames[i]);
+            }
+
+            for (int i = 0; i < toggleCodes.Length; i++)
+            {
+                if (code != toggleCodes[i])
+                    continue;
+                if (!toggleObjects[i])
+                    continue;
+
+                if (toggleActions[i] == KeypadToggleAction.Enable)
+                    toggleObjects[i].SetActive(true);
+                else if (toggleActions[i] == KeypadToggleAction.Disable)
+                    toggleObjects[i].SetActive(false);
+                else
+                    toggleObjects[i].SetActive(!toggleObjects[i].activeSelf);
             }
         }
     }

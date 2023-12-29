@@ -8,37 +8,40 @@ using VRC.Udon;
 namespace Texel
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
-    [DefaultExecutionOrder(-1)]
-    public class ForwardingAclHandler : UdonSharpBehaviour
+    public class ForwardingAclHandler : AccessControlHandler
     {
-        public AccessControl acl;
         public AccessControl[] forwardAcls;
 
-        [NonSerialized]
-        public VRCPlayerApi playerArg;
-        [NonSerialized]
-        public int checkResult;
-
-        void Start()
+        protected override void _Init()
         {
-            acl._RegsiterAccessHandler(this, "_CheckAccess", "playerArg", "checkResult");
+            base._Init();
+
+            foreach (var acl in forwardAcls)
+            {
+                if (acl)
+                    acl._Register(AccessControl.EVENT_VALIDATE, this, nameof(_OnValidate));
+            }
         }
 
-        public void _CheckAccess()
+        public override AccessHandlerResult _CheckAccess(VRCPlayerApi player)
         {
             for (int i = 0; i < forwardAcls.Length; i++)
             {
                 if (!Utilities.IsValid(forwardAcls[i]))
                     continue;
 
-                if (forwardAcls[i]._HasAccess(playerArg))
+                if (forwardAcls[i]._HasAccess(player))
                 {
-                    checkResult = AccessControl.RESULT_ALLOW;
-                    return;
+                    return AccessHandlerResult.Allow;
                 }
             }
 
-            checkResult = AccessControl.RESULT_PASS;
+            return AccessHandlerResult.Pass;
+        }
+
+        public void _OnValidate()
+        {
+            _UpdateHandlers(EVENT_REVALIDATE);
         }
     }
 }

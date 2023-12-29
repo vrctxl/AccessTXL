@@ -21,5 +21,15 @@ namespace Texel
 
             return false;
         }
+
+        public string[] UserList
+        {
+            get { return userList; }
+            set {
+                userList = value;
+                if (userList == null)
+                    userList = new string[0];
+            }
+        }
     }
 }

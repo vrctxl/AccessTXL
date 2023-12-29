@@ -34,6 +34,29 @@ namespace Texel
 
         protected override void _Init()
         {
+            if (!dynamicList)
+            {
+                DebugError("No dynamic list set on Access Grant Controller");
+                return;
+            }
+
+            if (!grantACL) {
+                SyncPlayerList syncList = dynamicList.syncedPlayerList;
+                if (syncList)
+                    grantACL = syncList.accessControl;
+
+                if (!grantACL)
+                {
+                    DebugError("No access control set on GrantACL or underlying dynamic whitelist.  Secure grant is not possible.");
+                    return;
+                }
+            } else
+            {
+                SyncPlayerList syncList = dynamicList.syncedPlayerList;
+                if (syncList && !syncList.accessControl)
+                    syncList.accessControl = grantACL;
+            }
+
             if (Utilities.IsValid(request))
                 request._Register(DynamicWhitelistRequest.EVENT_ACCESS_REQUEST, this, "_OnAccessRequest");
         }
@@ -92,6 +115,11 @@ namespace Texel
             if (!Utilities.IsValid(grantACL))
                 return true;
             return grantACL._LocalHasAccess();
+        }
+
+        void DebugError(string message)
+        {
+            Debug.LogError("[AccessTXL:DynamicWhitelistGrant] " + message);
         }
     }
 }
