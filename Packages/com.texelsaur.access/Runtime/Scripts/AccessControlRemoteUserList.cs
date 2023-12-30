@@ -145,14 +145,14 @@ namespace Texel
             if (data == null)
                 return;
 
-            bool hasObjectPath = jsonObjectPath == null || jsonObjectPath == "";
-            bool hasEntryPath = jsonEntryPath == null || jsonEntryPath == "";
+            bool hasObjectPath = jsonObjectPath != null && jsonObjectPath != "";
+            bool hasEntryPath = jsonEntryPath != null && jsonEntryPath != "";
 
             int jsonStart = 0;
             if (hasObjectPath)
-                jsonStart = data.IndexOf('[');
-            else
                 jsonStart = data.IndexOf('{');
+            else
+                jsonStart = data.IndexOf('[');
 
             if (jsonStart > 0)
                 data = data.Substring(jsonStart);
@@ -172,7 +172,7 @@ namespace Texel
                 {
                     if (target.TokenType != TokenType.DataDictionary)
                     {
-                        _DebugLog("Expected object token");
+                        _DebugLog($"Expected object token on object path, got {target.TokenType}");
                         return;
                     }
 
@@ -180,7 +180,7 @@ namespace Texel
                         target = nextToken;
                     else
                     {
-                        _DebugLog($"Could not get object key: {part}");
+                        _DebugLog($"Could not get object key on object path: {part}");
                         return;
                     }
                 }
@@ -208,12 +208,12 @@ namespace Texel
                 DataToken leaf = entry;
                 if (hasEntryPath)
                 {
-                    string[] pathParts = jsonObjectPath.Split('/');
+                    string[] pathParts = jsonEntryPath.Split('/');
                     foreach (string part in pathParts)
                     {
                         if (leaf.TokenType != TokenType.DataDictionary)
                         {
-                            _DebugLog("Expected object token");
+                            _DebugLog($"Expected object token on entry path, got {leaf.TokenType}");
                             return;
                         }
 
@@ -221,7 +221,7 @@ namespace Texel
                             leaf = nextToken;
                         else
                         {
-                            _DebugLog($"Could not get object key: {part}");
+                            _DebugLog($"Could not get object key on entry path: {part}");
                             return;
                         }
                     }

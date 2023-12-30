@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.1.1] - 12-29-23
+
+- Fixed JSON Array remote whitelist support
+
 ## [1.1.0] - 12-29-23
 
 - Added toggle object support to Access Keypad Controller

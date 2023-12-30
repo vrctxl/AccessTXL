@@ -6,7 +6,7 @@
     "email": "",
     "url": "https://texelsaurus.com"
   },
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Additional controls, access sources, and tools that build on the basic Access Control model",
   "gitDependencies": {},
   "vpmDependencies": {
