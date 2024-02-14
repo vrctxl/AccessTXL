@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.1.2] - 02-13-24
+
+- Added AccessTXL to GameObject->TXL menu
+
 ## [1.1.1] - 12-29-23
 
 - Fixed JSON Array remote whitelist support

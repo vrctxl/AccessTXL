@@ -1,9 +1,12 @@
 ﻿
 using System;
+using System.Runtime.CompilerServices;
 using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
+
+[assembly: InternalsVisibleTo("com.texelsaur.access.Editor")]
 
 namespace Texel
 {
@@ -17,19 +20,19 @@ namespace Texel
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class AccessKeypad : UdonSharpBehaviour
     {
-        [SerializeField] private AccessKeypadControl[] keypads;
+        [SerializeField] internal AccessKeypadControl[] keypads;
 
-        [SerializeField] private string[] whitelistCodes;
-        [SerializeField] private AccessControlDynamicUserList[] dynamicLists;
+        [SerializeField] internal string[] whitelistCodes;
+        [SerializeField] internal AccessControlDynamicUserList[] dynamicLists;
 
-        [SerializeField] private string[] functionCodes;
-        [SerializeField] private UdonBehaviour[] functionTargets;
-        [SerializeField] private string[] functionNames;
-        [SerializeField] private string[] functionArgs;
+        [SerializeField] internal string[] functionCodes;
+        [SerializeField] internal UdonBehaviour[] functionTargets;
+        [SerializeField] internal string[] functionNames;
+        [SerializeField] internal string[] functionArgs;
 
-        [SerializeField] private string[] toggleCodes;
-        [SerializeField] private GameObject[] toggleObjects;
-        [SerializeField] private KeypadToggleAction[] toggleActions;
+        [SerializeField] internal string[] toggleCodes;
+        [SerializeField] internal GameObject[] toggleObjects;
+        [SerializeField] internal KeypadToggleAction[] toggleActions;
 
         [NonSerialized]
         public string keypadArg = "";
