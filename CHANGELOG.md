@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.3] - 03-24-24
+
+- Min CommonTXL version 1.4.0
+- All users lists inherit new _ContainsPlayer and _ContainsAnyPlayerInWorld methods
+- Added start delay field to Remote User List
+- Changed user list and remote user lists to use dictionary lookups for usernames
+
+
 ## [1.1.2] - 02-13-24
 
 - Added AccessTXL to GameObject->TXL menu

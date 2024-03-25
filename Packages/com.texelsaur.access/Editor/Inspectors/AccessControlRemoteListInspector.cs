@@ -15,6 +15,7 @@ namespace Texel
         SerializedProperty jsonObjectPathProperty;
         SerializedProperty jsonEntryPathProperty;
         SerializedProperty loadRemoteOnStartProperty;
+        SerializedProperty startDelayProperty;
         SerializedProperty allowManualRefreshProperty;
         SerializedProperty allowPeriodicRefreshProperty;
         SerializedProperty refreshPeriodProperty;
@@ -32,6 +33,7 @@ namespace Texel
             jsonObjectPathProperty = serializedObject.FindProperty(nameof(AccessControlRemoteUserList.jsonObjectPath));
             jsonEntryPathProperty = serializedObject.FindProperty(nameof(AccessControlRemoteUserList.jsonEntryPath));
             loadRemoteOnStartProperty = serializedObject.FindProperty(nameof(AccessControlRemoteUserList.loadRemoteOnStart));
+            startDelayProperty = serializedObject.FindProperty(nameof(AccessControlRemoteUserList.startDelay));
             allowManualRefreshProperty = serializedObject.FindProperty(nameof(AccessControlRemoteUserList.allowManualRefresh));
             allowPeriodicRefreshProperty = serializedObject.FindProperty(nameof(AccessControlRemoteUserList.allowPeriodicRefresh));
             refreshPeriodProperty = serializedObject.FindProperty(nameof(AccessControlRemoteUserList.refreshPeriod));
@@ -66,6 +68,13 @@ namespace Texel
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Refresh Options", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(loadRemoteOnStartProperty, new GUIContent("Refresh on Start", "Whether or not remote data will be requested when the player joins."));
+            if (loadRemoteOnStartProperty.boolValue)
+            {
+                EditorGUI.indentLevel++;
+                EditorGUILayout.PropertyField(startDelayProperty, new GUIContent("Start Delay", "Time in seconds to delay calling the initial refresh on start"));
+                EditorGUI.indentLevel--;
+            }
+
             EditorGUILayout.PropertyField(allowManualRefreshProperty, new GUIContent("Enable Sync Refresh", "Allows a local client to instruct all players in world to reload remote data via network sync"));
             if (allowManualRefreshProperty.boolValue)
             {

@@ -1,6 +1,7 @@
 ﻿
 using UdonSharp;
 using UnityEngine;
+using VRC.SDK3.Data;
 using VRC.SDKBase;
 using VRC.Udon;
 
@@ -11,15 +12,29 @@ namespace Texel
     {
         public string[] userList;
 
-        public override bool _ContainsName(string name)
+        private DataDictionary userDict;
+
+        protected override void _Init()
         {
+            base._Init();
+
+            userDict = new DataDictionary();
+            _SetUserDict(userList);
+        }
+
+        void _SetUserDict(string[] names)
+        {
+            userDict.Clear();
             for (int i = 0; i < userList.Length; i++)
             {
-                if (userList[i] == name)
-                    return true;
+                if (userList[i] != "" && !userDict.ContainsKey(userList[i]))
+                    userDict.Add(userList[i], userList[i]);
             }
+        }
 
-            return false;
+        public override bool _ContainsName(string name)
+        {
+            return userDict.ContainsKey(name);
         }
 
         public string[] UserList
@@ -29,6 +44,8 @@ namespace Texel
                 userList = value;
                 if (userList == null)
                     userList = new string[0];
+
+                _SetUserDict(userList);
             }
         }
     }

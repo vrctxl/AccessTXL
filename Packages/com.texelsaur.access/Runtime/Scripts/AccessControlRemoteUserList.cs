@@ -25,6 +25,7 @@ namespace Texel
         public string jsonObjectPath;
         public string jsonEntryPath;
         public bool loadRemoteOnStart = true;
+        public float startDelay = 0;
         public bool allowManualRefresh = false;
         public bool allowPeriodicRefresh = false;
         public float refreshPeriod = 1800;
@@ -36,26 +37,44 @@ namespace Texel
         [UdonSynced]
         int syncRefreshCount = 0;
 
+        DataDictionary userDict;
+
         protected override void _Init()
         {
             base._Init();
 
+            userDict = new DataDictionary();
+            _SetUserDict(userList);
+
             if (loadRemoteOnStart)
-                _LoadFromRemote();
+            {
+                if (startDelay > 0)
+                    SendCustomEventDelayedSeconds(nameof(_LocalRefresh), startDelay);
+                else
+                    _LocalRefresh();
+            }
 
             if (allowPeriodicRefresh && refreshPeriod > 0)
-                SendCustomEventDelayedSeconds(nameof(_InternalPeriodicRefresh), refreshPeriod);
+                SendCustomEventDelayedSeconds(nameof(_InternalPeriodicRefresh), refreshPeriod + startDelay);
+        }
+
+        void _SetUserDict(string[] names)
+        {
+            _EnsureInit();
+
+            userDict.Clear();
+            for (int i = 0; i < userList.Length; i++)
+            {
+                if (userList[i] != "" && !userDict.ContainsKey(userList[i]))
+                    userDict.Add(userList[i], userList[i]);
+            }
         }
 
         public override bool _ContainsName(string name)
         {
-            for (int i = 0; i < userList.Length; i++)
-            {
-                if (userList[i] == name)
-                    return true;
-            }
+            _EnsureInit();
 
-            return false;
+            return userDict.ContainsKey(name);
         }
 
         public string[] UserList
@@ -66,6 +85,8 @@ namespace Texel
                 userList = value;
                 if (userList == null)
                     userList = new string[0];
+
+                _SetUserDict(userList);
             }
         }
 
@@ -137,11 +158,14 @@ namespace Texel
             }
 
             userList = data.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            _SetUserDict(userList);
         }
 
         public void _LoadJsonArrayData(string data)
         {
             userList = new string[0];
+            _SetUserDict(userList);
+ 
             if (data == null)
                 return;
 
@@ -243,6 +267,8 @@ namespace Texel
                 Array.Copy(userList, compactList, nextIndex);
                 userList = compactList;
             }
+
+            _SetUserDict(userList);
         }
 
         void _DebugLog(string message)
