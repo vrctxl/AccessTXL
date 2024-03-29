@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.1.4] - 03-28-24
+
+- Min CommonTXL version 1.5.0
+
 ## [1.1.3] - 03-24-24
 
 - Min CommonTXL version 1.4.0
