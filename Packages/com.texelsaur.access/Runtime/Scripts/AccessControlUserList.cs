@@ -34,6 +34,7 @@ namespace Texel
 
         public override bool _ContainsName(string name)
         {
+            _EnsureInit();
             return userDict.ContainsKey(name);
         }
 

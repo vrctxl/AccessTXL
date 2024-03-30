@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.1.5] - 03-30-24
+
+- Fixed initialization race in user lists
+
 ## [1.1.4] - 03-28-24
 
 - Min CommonTXL version 1.5.0
