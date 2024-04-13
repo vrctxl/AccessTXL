@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.2.0] - 04-12-24
+
+- Added DataValidator base class for performing transformation and validation on data
+- Added DataValidator support to Remote Whitelist
+- Added DigestValidator implementation that can validate data with MD5 and various SHA hashes
+- Added DataValidatorKey base class for providing keys to data validator
+- Added SerializedKey implementation of key provider that returns a key from a serialized field
+- Included UdonHashLib library (under MIT License) to provide MD5/SHA hash support
+- Added Debug User List prefab to list in-world players that have access on one or more ACLs
+- Added menu entries for two validators
+
 ## [1.1.5] - 03-30-24
 
 - Fixed initialization race in user lists

@@ -106,7 +106,7 @@ namespace Texel
             Selection.activeObject = whitelistPrefab;
         }
 
-        [MenuItem("GameObject/TXL/AccessTXL/Whitelist Sources/Remote Whitelist", false, 210)]
+        [MenuItem("GameObject/TXL/AccessTXL/Whitelist Sources/Remote Whitelist", false, 211)]
         public static void AddRemoteWhitelistToScene()
         {
             AccessControl acl = MenuUtil.GetObjectOrParent<AccessControl>();
@@ -126,7 +126,7 @@ namespace Texel
             Selection.activeObject = whitelistPrefab;
         }
 
-        [MenuItem("GameObject/TXL/AccessTXL/Whitelist Sources/Dynamic Whitelist", false, 210)]
+        [MenuItem("GameObject/TXL/AccessTXL/Whitelist Sources/Dynamic Whitelist", false, 212)]
         public static void AddDynamicWhitelistToScene()
         {
             AccessControl acl = MenuUtil.GetObjectOrParent<AccessControl>();
@@ -146,6 +146,34 @@ namespace Texel
             EditorUtility.DisplayDialog("Dynamic Whitelist", "The newly added dynamic whitelist won't do anything on its own.\n\nSelect the whitelist and try adding one of the Access Prefabs from the menu.", "OK");
 
             Selection.activeObject = whitelistPrefab;
+        }
+
+        [MenuItem("GameObject/TXL/AccessTXL/Validation/Digest Validator", false, 220)]
+        public static void AddDigestValidatorToScene()
+        {
+            GameObject validatorPrefab = MenuUtil.AddPrefabToActiveOrScene("Packages/com.texelsaur.access/Runtime/Prefabs/Validation/Digest Validator.prefab");
+            DataValidator validator = validatorPrefab.GetComponent<DataValidator>();
+
+            AccessControlRemoteUserList remoteList = MenuUtil.GetObjectOrParent<AccessControlRemoteUserList>();
+            if (remoteList)
+                remoteList.dataValidator = validator;
+
+            EditorUtility.DisplayDialog("Digest Data Validator", "The newly added validator needs a key provider.\n\nYou can add a Serialized Key provider, but you should consider writing one specific to your needs.", "OK");
+
+            Selection.activeObject = validatorPrefab;
+        }
+
+        [MenuItem("GameObject/TXL/AccessTXL/Validation/Digest Validator - Serialized Key", false, 221)]
+        public static void AddSerializedKeyDigestValidatorToScene()
+        {
+            GameObject validatorPrefab = MenuUtil.AddPrefabToActiveOrScene("Packages/com.texelsaur.access/Runtime/Prefabs/Validation/Serialized Key Digest Validator.prefab");
+            DataValidator validator = validatorPrefab.GetComponent<DataValidator>();
+
+            AccessControlRemoteUserList remoteList = MenuUtil.GetObjectOrParent<AccessControlRemoteUserList>();
+            if (remoteList)
+                remoteList.dataValidator = validator;
+
+            Selection.activeObject = validatorPrefab;
         }
     }
 }

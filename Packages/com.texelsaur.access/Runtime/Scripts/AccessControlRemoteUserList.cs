@@ -24,6 +24,7 @@ namespace Texel
         public ACLListFormat remoteStringFormat;
         public string jsonObjectPath;
         public string jsonEntryPath;
+        public DataValidator dataValidator;
         public bool loadRemoteOnStart = true;
         public float startDelay = 0;
         public bool allowManualRefresh = false;
@@ -141,10 +142,28 @@ namespace Texel
         {
             _DebugLog($"Received data {result.Result.Length} characters");
 
+            string data = result.Result;
+
+            if (dataValidator)
+            {
+                if (!dataValidator._PreValidate(data))
+                {
+                    _DebugLog("Pre-validation failed");
+                    return;
+                }
+
+                data = dataValidator._Transform(data);
+                if (!dataValidator._PostValidate(data))
+                {
+                    _DebugLog("Post-validation failed");
+                    return;
+                }
+            }
+
             if (remoteStringFormat == ACLListFormat.Newline)
-                _LoadNewlineData(result.Result);
+                _LoadNewlineData(data);
             else if (remoteStringFormat == ACLListFormat.JSONArray)
-                _LoadJsonArrayData(result.Result);
+                _LoadJsonArrayData(data);
 
             _UpdateHandlers(EVENT_REVALIDATE);
         }

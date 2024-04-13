@@ -14,6 +14,7 @@ namespace Texel
         SerializedProperty remoteStringFormatProperty;
         SerializedProperty jsonObjectPathProperty;
         SerializedProperty jsonEntryPathProperty;
+        SerializedProperty dataValiadtorProperty;
         SerializedProperty loadRemoteOnStartProperty;
         SerializedProperty startDelayProperty;
         SerializedProperty allowManualRefreshProperty;
@@ -32,6 +33,7 @@ namespace Texel
             remoteStringFormatProperty = serializedObject.FindProperty(nameof(AccessControlRemoteUserList.remoteStringFormat));
             jsonObjectPathProperty = serializedObject.FindProperty(nameof(AccessControlRemoteUserList.jsonObjectPath));
             jsonEntryPathProperty = serializedObject.FindProperty(nameof(AccessControlRemoteUserList.jsonEntryPath));
+            dataValiadtorProperty = serializedObject.FindProperty(nameof(AccessControlRemoteUserList.dataValidator));
             loadRemoteOnStartProperty = serializedObject.FindProperty(nameof(AccessControlRemoteUserList.loadRemoteOnStart));
             startDelayProperty = serializedObject.FindProperty(nameof(AccessControlRemoteUserList.startDelay));
             allowManualRefreshProperty = serializedObject.FindProperty(nameof(AccessControlRemoteUserList.allowManualRefresh));
@@ -64,6 +66,10 @@ namespace Texel
                 EditorGUILayout.PropertyField(jsonEntryPathProperty, new GUIContent("JSON Entry Path", "If the target array contains objects instead of strings, this is the path to the name string within each array entry.  Leave empty if the target array is an array of strings."));
                 EditorGUI.indentLevel--;
             }
+
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Validation", EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(dataValiadtorProperty, new GUIContent("Data Validator", "Optional validation or transformation of downloaded data before loading names into the user list."));
 
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Refresh Options", EditorStyles.boldLabel);
