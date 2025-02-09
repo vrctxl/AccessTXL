@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Runtime.CompilerServices;
 using Texel;
 using UdonSharp;
 using UnityEngine;
@@ -9,9 +10,18 @@ using VRC.SDKBase;
 using VRC.Udon;
 using VRC.Udon.Common;
 
+[assembly: InternalsVisibleTo("com.texelsaur.access.Editor")]
+
 namespace Texel
 {
-    public enum ACLListFormat {
+    public enum ACLRemoteSource
+    {
+        URL,
+        RemoteList,
+    }
+
+    public enum ACLListFormat
+    {
         Newline,
         JSONArray,
     }
@@ -19,6 +29,9 @@ namespace Texel
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class AccessControlRemoteUserList : AccessControlUserSource
     {
+        [SerializeField] internal ACLRemoteSource source = ACLRemoteSource.URL;
+        [SerializeField] internal AccessControlRemoteUserList sourceRemoteList;
+
         public AccessControl accessControl;
         public VRCUrl remoteStringUrl;
         public ACLListFormat remoteStringFormat;
@@ -38,7 +51,9 @@ namespace Texel
         [UdonSynced]
         int syncRefreshCount = 0;
 
-        DataDictionary userDict;
+        private bool inLoad = false;
+        private DataDictionary userDict;
+        private AccessControlRemoteUserList[] dependentRemoteLists = new AccessControlRemoteUserList[0];
 
         protected override void _Init()
         {
@@ -47,16 +62,22 @@ namespace Texel
             userDict = new DataDictionary();
             _SetUserDict(userList);
 
-            if (loadRemoteOnStart)
-            {
-                if (startDelay > 0)
-                    SendCustomEventDelayedSeconds(nameof(_LocalRefresh), startDelay);
-                else
-                    _LocalRefresh();
-            }
+            if (source == ACLRemoteSource.RemoteList && sourceRemoteList)
+                sourceRemoteList._RegisterDependentRemoteList(this);
 
-            if (allowPeriodicRefresh && refreshPeriod > 0)
-                SendCustomEventDelayedSeconds(nameof(_InternalPeriodicRefresh), refreshPeriod + startDelay);
+            if (source == ACLRemoteSource.URL)
+            {
+                if (loadRemoteOnStart)
+                {
+                    if (startDelay > 0)
+                        SendCustomEventDelayedSeconds(nameof(_LocalRefresh), startDelay);
+                    else
+                        _LocalRefresh();
+                }
+
+                if (allowPeriodicRefresh && refreshPeriod > 0)
+                    SendCustomEventDelayedSeconds(nameof(_InternalPeriodicRefresh), refreshPeriod + startDelay);
+            }
         }
 
         void _SetUserDict(string[] names)
@@ -69,6 +90,17 @@ namespace Texel
                 if (userList[i] != "" && !userDict.ContainsKey(userList[i]))
                     userDict.Add(userList[i], userList[i]);
             }
+        }
+
+        public void _RegisterDependentRemoteList(AccessControlRemoteUserList dependent)
+        {
+            foreach (var elem in dependentRemoteLists)
+            {
+                if (elem == dependent)
+                    return;
+            }
+
+            dependentRemoteLists = (AccessControlRemoteUserList[])UtilityTxl.ArrayAddElement(dependentRemoteLists, dependent, dependent.GetType());
         }
 
         public override bool _ContainsName(string name)
@@ -142,13 +174,23 @@ namespace Texel
         {
             _DebugLog($"Received data {result.Result.Length} characters");
 
-            string data = result.Result;
+            _LoadData(result.Result);
+        }
+
+        public void _LoadData(string data)
+        {
+            if (inLoad)
+                return;
+
+            inLoad = true;
+            string rawData = data;
 
             if (dataValidator)
             {
                 if (!dataValidator._PreValidate(data))
                 {
                     _DebugLog("Pre-validation failed");
+                    inLoad = false;
                     return;
                 }
 
@@ -156,6 +198,7 @@ namespace Texel
                 if (!dataValidator._PostValidate(data))
                 {
                     _DebugLog("Post-validation failed");
+                    inLoad = false;
                     return;
                 }
             }
@@ -166,6 +209,11 @@ namespace Texel
                 _LoadJsonArrayData(data);
 
             _UpdateHandlers(EVENT_REVALIDATE);
+
+            foreach (var dep in dependentRemoteLists)
+                dep._LoadData(rawData);
+
+            inLoad = false;
         }
 
         public void _LoadNewlineData(string data)
@@ -184,7 +232,7 @@ namespace Texel
         {
             userList = new string[0];
             _SetUserDict(userList);
- 
+
             if (data == null)
                 return;
 

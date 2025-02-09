@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.1] - 02-09-24
+
+- Added remote source property to Remote Whitelist
+- Remote whitelist can refer to another remote whitelist for its data download
+
 ## [1.2.0] - 04-12-24
 
 - Added DataValidator base class for performing transformation and validation on data

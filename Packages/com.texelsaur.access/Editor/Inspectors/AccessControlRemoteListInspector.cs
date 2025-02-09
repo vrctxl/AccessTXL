@@ -9,6 +9,8 @@ namespace Texel
     [CustomEditor(typeof(AccessControlRemoteUserList))]
     public class AccessControlRemoteListInspector : Editor
     {
+        SerializedProperty sourceProperty;
+        SerializedProperty sourceRemoteListProperty;
         SerializedProperty accessControlProperty;
         SerializedProperty remoteStringUrlProperty;
         SerializedProperty remoteStringFormatProperty;
@@ -28,6 +30,8 @@ namespace Texel
 
         private void OnEnable()
         {
+            sourceProperty = serializedObject.FindProperty(nameof(AccessControlRemoteUserList.source));
+            sourceRemoteListProperty = serializedObject.FindProperty(nameof(AccessControlRemoteUserList.sourceRemoteList));
             accessControlProperty = serializedObject.FindProperty(nameof(AccessControlRemoteUserList.accessControl));
             remoteStringUrlProperty = serializedObject.FindProperty(nameof(AccessControlRemoteUserList.remoteStringUrl));
             remoteStringFormatProperty = serializedObject.FindProperty(nameof(AccessControlRemoteUserList.remoteStringFormat));
@@ -56,7 +60,14 @@ namespace Texel
             EditorGUI.BeginChangeCheck();
 
             EditorGUILayout.LabelField("Remote Loading", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(remoteStringUrlProperty, new GUIContent("Remote String URL"));
+            EditorGUILayout.PropertyField(sourceProperty, new GUIContent("Remote Source"));
+
+            bool isUrlSource = sourceProperty.enumValueIndex == (int)ACLRemoteSource.URL;
+            if (isUrlSource)
+                EditorGUILayout.PropertyField(remoteStringUrlProperty, new GUIContent("Remote String URL"));
+            else
+                EditorGUILayout.PropertyField(sourceRemoteListProperty, new GUIContent("Remote User List"));
+
             EditorGUILayout.PropertyField(remoteStringFormatProperty, new GUIContent("Remote String Format"));
 
             if (remoteStringFormatProperty.intValue == (int)ACLListFormat.JSONArray)
@@ -71,30 +82,33 @@ namespace Texel
             EditorGUILayout.LabelField("Validation", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(dataValiadtorProperty, new GUIContent("Data Validator", "Optional validation or transformation of downloaded data before loading names into the user list."));
 
-            EditorGUILayout.Space();
-            EditorGUILayout.LabelField("Refresh Options", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(loadRemoteOnStartProperty, new GUIContent("Refresh on Start", "Whether or not remote data will be requested when the player joins."));
-            if (loadRemoteOnStartProperty.boolValue)
+            if (isUrlSource)
             {
-                EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(startDelayProperty, new GUIContent("Start Delay", "Time in seconds to delay calling the initial refresh on start"));
-                EditorGUI.indentLevel--;
-            }
+                EditorGUILayout.Space();
+                EditorGUILayout.LabelField("Refresh Options", EditorStyles.boldLabel);
+                EditorGUILayout.PropertyField(loadRemoteOnStartProperty, new GUIContent("Refresh on Start", "Whether or not remote data will be requested when the player joins."));
+                if (loadRemoteOnStartProperty.boolValue)
+                {
+                    EditorGUI.indentLevel++;
+                    EditorGUILayout.PropertyField(startDelayProperty, new GUIContent("Start Delay", "Time in seconds to delay calling the initial refresh on start"));
+                    EditorGUI.indentLevel--;
+                }
 
-            EditorGUILayout.PropertyField(allowManualRefreshProperty, new GUIContent("Enable Sync Refresh", "Allows a local client to instruct all players in world to reload remote data via network sync"));
-            if (allowManualRefreshProperty.boolValue)
-            {
-                EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(accessControlProperty, new GUIContent("Access Control", "Optional access control object that gates which clients can request a sync reload"));
-                EditorGUI.indentLevel--;
-            }
+                EditorGUILayout.PropertyField(allowManualRefreshProperty, new GUIContent("Enable Sync Refresh", "Allows a local client to instruct all players in world to reload remote data via network sync"));
+                if (allowManualRefreshProperty.boolValue)
+                {
+                    EditorGUI.indentLevel++;
+                    EditorGUILayout.PropertyField(accessControlProperty, new GUIContent("Access Control", "Optional access control object that gates which clients can request a sync reload"));
+                    EditorGUI.indentLevel--;
+                }
 
-            EditorGUILayout.PropertyField(allowPeriodicRefreshProperty, new GUIContent("Enable Periodic Refresh", "Automatically reloads remote data at a fixed time interval"));
-            if (allowPeriodicRefreshProperty.boolValue)
-            {
-                EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(refreshPeriodProperty, new GUIContent("Refresh Period", "Time interval in seconds between remote data reloads"));
-                EditorGUI.indentLevel--;
+                EditorGUILayout.PropertyField(allowPeriodicRefreshProperty, new GUIContent("Enable Periodic Refresh", "Automatically reloads remote data at a fixed time interval"));
+                if (allowPeriodicRefreshProperty.boolValue)
+                {
+                    EditorGUI.indentLevel++;
+                    EditorGUILayout.PropertyField(refreshPeriodProperty, new GUIContent("Refresh Period", "Time interval in seconds between remote data reloads"));
+                    EditorGUI.indentLevel--;
+                }
             }
 
             EditorGUILayout.Space();
