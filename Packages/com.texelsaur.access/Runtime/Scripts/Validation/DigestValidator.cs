@@ -46,8 +46,6 @@ namespace Texel
             }
 
             cachedData = data.Substring(length);
-            Debug.Log($"Digest: {digest}");
-            Debug.Log($"CACHE: {cachedData}");
             string refDigest = _HashData(cachedData);
 
             return digest == refDigest;

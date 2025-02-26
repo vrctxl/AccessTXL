@@ -173,7 +173,6 @@ namespace Texel
         public override void OnStringLoadSuccess(IVRCStringDownload result)
         {
             _DebugLog($"Received data {result.Result.Length} characters");
-
             _LoadData(result.Result);
         }
 

@@ -26,7 +26,6 @@ namespace Texel
 
         public override bool _ContainsName(string name)
         {
-            Debug.Log($"ContainsName {name}");
             if (!syncedPlayerList)
                 return false;
 

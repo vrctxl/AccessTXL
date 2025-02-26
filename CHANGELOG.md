@@ -1,6 +1,10 @@
 # Changelog
 
-## [1.2.1] - 02-09-24
+## [1.2.2] - 02-26-25
+
+- Cleaned up a few stray logging statements
+
+## [1.2.1] - 02-09-25
 
 - Added remote source property to Remote Whitelist
 - Remote whitelist can refer to another remote whitelist for its data download
