@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.3] - 03-24-25
+
+- Added _GetCode and _SetCode methods to AccessKeypad
+
 ## [1.2.2] - 02-26-25
 
 - Cleaned up a few stray logging statements

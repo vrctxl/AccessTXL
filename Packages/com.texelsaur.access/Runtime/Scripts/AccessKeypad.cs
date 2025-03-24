@@ -10,6 +10,13 @@ using VRC.Udon;
 
 namespace Texel
 {
+    public enum KeypadCodeType
+    {
+        Whitelist,
+        Function,
+        Toggle,
+    }
+
     public enum KeypadToggleAction
     {
         Enable,
@@ -89,6 +96,36 @@ namespace Texel
                 else
                     toggleObjects[i].SetActive(!toggleObjects[i].activeSelf);
             }
+        }
+
+        public string _GetCode(KeypadCodeType type, int index)
+        {
+            string[] list = _GetCodeList(type);
+            if (list == null || index < 0 || index >= list.Length)
+                return "";
+
+            return list[index];
+        }
+
+        public void _SetCode(KeypadCodeType type, int index, string code)
+        {
+            string[] list = _GetCodeList(type);
+            if (list == null || index < 0 || index >= list.Length)
+                return;
+
+            list[index] = code;
+        }
+
+        string[] _GetCodeList(KeypadCodeType type)
+        {
+            if (type == KeypadCodeType.Whitelist)
+                return whitelistCodes;
+            if (type == KeypadCodeType.Function)
+                return functionCodes;
+            if (type == KeypadCodeType.Toggle)
+                return toggleCodes;
+
+            return null;
         }
     }
 }
