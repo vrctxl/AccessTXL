@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.4] - 10-28-25
+
+- Added proper undo/persistence to GameObject->TXL menu actions
+
 ## [1.2.3] - 03-24-25
 
 - Added _GetCode and _SetCode methods to AccessKeypad

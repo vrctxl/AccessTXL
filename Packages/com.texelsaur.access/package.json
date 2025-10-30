@@ -6,11 +6,11 @@
     "email": "",
     "url": "https://texelsaurus.com"
   },
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Additional controls, access sources, and tools that build on the basic Access Control model",
   "gitDependencies": {},
   "vpmDependencies": {
-    "com.texelsaur.common": "^1.4.0"
+    "com.texelsaur.common": "^1.7.1"
   },
   "legacyFolders": {
     "Assets\\Texel\\ACL": "6d836c3eaf6837d40aa4219fb6a42333",

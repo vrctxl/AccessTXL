@@ -283,6 +283,8 @@ namespace Texel
             }
 
             DataList list = target.DataList;
+            _DebugLog($"Loading {list.Count} elements");
+
             userList = new string[list.Count];
             int nextIndex = 0;
 
