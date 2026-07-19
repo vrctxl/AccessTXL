@@ -61,6 +61,7 @@ namespace Texel
         void _RefreshAll()
         {
             int playerCount = VRCPlayerApi.GetPlayerCount();
+            players = (VRCPlayerApi[])UtilityTxl.ArrayMinSize(players, playerCount, typeof(VRCPlayerApi));
             players = VRCPlayerApi.GetPlayers(players);
 
             for (int i = 0; i < accessControl.Length; i++)

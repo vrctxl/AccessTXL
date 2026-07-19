@@ -7,7 +7,7 @@ namespace Texel
     [InitializeOnLoad]
     public class MenuAccessTXL
     {
-        [MenuItem("Tools/TXL/AccessTXL/Add \"Access Control\" Prefab to Scene", false)]
+        [MenuItem("Tools/TXL/AccessTXL/Add \"Access Control\" Prefab to Scene", false, 1100)]
         [MenuItem("GameObject/TXL/AccessTXL/Access Control", false, 100)]
         public static void AddAccessControlToScene()
         {

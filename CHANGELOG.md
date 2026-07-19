@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.3.0] - 07-19-26
+
+- Requires CommonTXL 2.0.0+
+- Fixed hardcoded player array in DebugUserList
+
 ## [1.2.4] - 10-28-25
 
 - Added proper undo/persistence to GameObject->TXL menu actions
@@ -11,7 +16,7 @@
 ## [1.2.2] - 02-26-25
 
 - Cleaned up a few stray logging statements
-
+XYC!uez3kpn0zwe1jrp
 ## [1.2.1] - 02-09-25
 
 - Added remote source property to Remote Whitelist
